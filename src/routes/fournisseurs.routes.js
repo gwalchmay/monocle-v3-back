@@ -5,7 +5,7 @@ const { connection } = require('../../connection');
 router.get('/', (req, res) => {
     connection.query('SELECT id, nom FROM fournisseur ORDER BY nom', (err, results) => {
         if (err) {
-            res.status(500).send('Erreur lors de la récupération du panier');
+            res.status(500).send('Erreur lors de la récupération de la liste des fournisseurs de montures');
         } else {
             res.json(results);
         }
@@ -17,7 +17,7 @@ router.get('/:fournisseur', (req, res) => {
     const idFournisseur = req.params.fournisseur;
     connection.query('SELECT * FROM fournisseur WHERE fournisseur.id=?', idFournisseur, (err, results) => {
         if (err) {
-            res.status(500).send('Erreur lors de la récupération du panier');
+            res.status(500).send('Erreur lors de la récupération du fournisseur');
         } else {
             res.json(results[0]);
         }
