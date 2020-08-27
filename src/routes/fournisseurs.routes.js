@@ -19,7 +19,7 @@ router.get('/:fournisseur', (req, res) => {
         if (err) {
             res.status(500).send('Erreur lors de la récupération du panier');
         } else {
-            res.json(results);
+            res.json(results[0]);
         }
     });
 });
