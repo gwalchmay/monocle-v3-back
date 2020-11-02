@@ -33,8 +33,13 @@ router.post('/login', (req, res) => {
             return res.status(400).json({ message: info.message });
         }
         const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: 3600 });
-        return res.status(200).json({ user, token, message: info.message });
+        return res.status(200).json({ token, message: info.message });
     })(req, res);
+});
+
+router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
+    console.log(req.user);
+    res.sendStatus(200);
 });
 
 router.get('/valide_token', passport.authenticate('jwt', { session: false }), (req, res) => {
