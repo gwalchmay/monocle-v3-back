@@ -6,6 +6,7 @@ const lentillesRouter = require('./lentilles.routes');
 const mutuellesRouter = require('./mutuelles.routes');
 const authRouter = require('./auth.routes');
 const marquesRouter = require('./marques.routes');
+const mailRouter = require('./mail.routes');
 
 const ALLOWED_ORIGINS = process.env.CLIENT_APP_ORIGIN.split(',');
 
@@ -20,6 +21,7 @@ router.use('/verriers', verriersRouter);
 router.use('/lentilles', lentillesRouter);
 router.use('/auth', authRouter);
 router.use('/marques', marquesRouter);
+router.use('/contact', mailRouter);
 
 
 module.exports = router;
