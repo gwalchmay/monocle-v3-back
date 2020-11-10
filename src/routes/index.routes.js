@@ -8,6 +8,7 @@ const authRouter = require('./auth.routes');
 const marquesRouter = require('./marques.routes');
 const mailRouter = require('./mail.routes');
 const dallesRouter = require('./dalles.routes');
+const notesRouter = require('./notes.routes');
 
 const ALLOWED_ORIGINS = process.env.CLIENT_APP_ORIGIN.split(',');
 
@@ -24,6 +25,7 @@ router.use('/auth', authRouter);
 router.use('/marques', marquesRouter);
 router.use('/contact', mailRouter);
 router.use('/dalles', dallesRouter )
+router.use('/notes', notesRouter )
 
 
 module.exports = router;

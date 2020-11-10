@@ -5,7 +5,7 @@ const passport = require('../../helpers/passport');
 //récupération des dalles d'un utilisateur
 router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
     const user = req.user.id;
-    connection.query(`SELECT * FROM accueil_dalle WHERE magasin_id = ${user} ORDER BY position`, (err, results) => {
+    connection.query(`SELECT * FROM accueil_dalle WHERE magasin_id = ${user} ORDER BY id`, (err, results) => {
         if (err) {
             res.status(500).send(err.message);
         } else {
