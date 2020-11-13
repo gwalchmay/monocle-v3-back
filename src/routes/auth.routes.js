@@ -3,11 +3,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const connection = require('../../connection');
 const passport = require('../../helpers/passport');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const router = express.Router();
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+    }
+});
 
+
+// création d'un nouvel utilisateur
 router.post('/newuser', (req, res) => {
     const formData = {
         login: req.body.login,
@@ -24,6 +35,7 @@ router.post('/newuser', (req, res) => {
     });
 });
 
+// connexion d'un nouvel utilisateur
 router.post('/login', (req, res) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -32,14 +44,43 @@ router.post('/login', (req, res) => {
         if (!user) {
             return res.status(400).json({ message: info.message });
         }
-        const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: 3600 });
+        const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
         return res.status(200).json({ token, message: info.message });
     })(req, res);
 });
 
-router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log(req.user);
-    res.sendStatus(200);
+
+
+// renvoi d'un mot de passe
+router.put('/reset-mdp', (req, res) => {
+    const newMdp = Math.random().toString(20).substr(2, 10);
+    const password = bcrypt.hashSync(newMdp, 10);
+    const email = req.body.email;
+    console.log(email);
+
+    connection.query(`UPDATE users SET password = ? WHERE email = ?`, [password, email], (err) => {
+        if (err) {
+            res.status(500).send({ flash: err.message });
+        } else {
+            console.log(newMdp);
+            const mail = {
+                from: 'Lemonocle.net',
+                to: email,
+                subject: "Votre mot de passe a été mis à jour",
+                text: `Suite à votre demande sur lemonocle.net, votre mot de passe a été mis à jour. Votre nouveau mot de passe est : ${newMdp} . `
+            }
+            transporter.sendMail(mail, (err, data) => {
+                if (err) {
+                    res.json({
+                        status: err.message
+                    })
+                } else {
+                    res.status(201).send({ message: 'Un nouveau mot de passe a été envoyé sur votre adresse mail !' });
+                }
+            }
+            );
+        }
+    });
 });
 
 router.get('/valide_token', passport.authenticate('jwt', { session: false }), (req, res) => {

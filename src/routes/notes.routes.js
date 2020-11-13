@@ -65,6 +65,52 @@ router.put('/fournisseur/:fournisseur', passport.authenticate('jwt', { session: 
     })
 });
 
+//récupération des représentants d'un fournisseur
+router.get('/representant/:type/:fournisseur', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const user = req.user.id;
+    const fournisseur = req.params.fournisseur;
+    const type = req.params.type;
+    connection.query(`SELECT * FROM magasin_fournisseur_representant WHERE magasin_id = ${user} AND fournisseur_id = ${fournisseur} AND fournisseur_type = ${type}`, (err, results) => {
+        if (err) {
+            res.status(500).send(err.message);
+            console.log(err.message);
+        } else {
+            res.json(results);
+        }
+    });
+});
+//ajout d'un représentant à un fournisseur
+router.put('/representant/:fournisseur', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const formData = {
+        magasin_id: req.user.id,
+        fournisseur_id: req.params.fournisseur,
+        fournisseur_type: req.body.fournisseur_type,
+        marque_nom: req.body.marque_nom,
+        representant_nom: req.body.representant_nom,
+        representant_telephone: req.body.representant_telephone,
+        representant_email: req.body.representant_email
+    }
+    connection.query('INSERT INTO magasin_fournisseur_representant SET ?', formData, (error, results) => {
+        if (error) {
+            res.status(500).send(error.message);
+        } else {
+            res.json(results);
+        }
+    })
+});
+
+//suppression d'un représentant
+router.delete('/representant/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const id = req.params.id;
+    connection.query(`DELETE FROM magasin_fournisseur_representant WHERE id = ? `, id, (err) => {
+        if (err) {
+            res.status(500).send(err.message);
+        } else {
+            res.sendStatus(200);
+        }
+    });
+});
+
 
 
 module.exports = router;
