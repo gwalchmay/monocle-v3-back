@@ -24,7 +24,7 @@ transporter.verify(function (error, success) {
 });
 
 
-// envoir d'un email par le formulaire de contact
+// envoi d'un email par le formulaire de contact
 router.post('/', (req, res, next) => {
     const email = req.body.email
     const subject = req.body.subject

@@ -35,9 +35,9 @@ router.post('/newuser', (req, res) => {
     });
 });
 
-// connexion d'un nouvel utilisateur
+// connexion d'un utilisateur
 router.post('/login', (req, res) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('user', (err, user, info) => {
         if (err) {
             return res.status(500).send(err);
         }
@@ -83,8 +83,22 @@ router.put('/reset-mdp', (req, res) => {
     });
 });
 
-router.get('/valide_token', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.sendStatus(200);
+// connexion de l'administrateur
+router.post('/admin-login', (req, res) => {
+    passport.authenticate('admin', (err, user, info) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        else if (!user) {
+            return res.status(400).json({ message: info.message });
+        }
+        const token = jwt.sign(user, process.env.JWT_SECRET2, { expiresIn: "1d" });
+        return res.status(200).json({ token, message: info.message });
+    })(req, res);
 });
+
+router.get('/valide_token', passport.authenticate('jwt-admin', { session: false }), (req, res) => {
+    res.sendStatus(200);
+  });
 
 module.exports = router;
