@@ -20,16 +20,16 @@ passport.use('user', new LocalStrategy(
         return cb(err);
       } if (results.length === 0) {
         return cb(null, false, {
-          message: 'identifiant ou mot de passe incorrect',
+          message: 'Identifiant ou mot de passe incorrect.',
         });
       }
       if (bcrypt.compareSync(password, results[0].password)) {
         const id = results[0].id;
         const user = { id };
-        return cb(null, user, { message: 'Vous êtes bien connecté' });
+        return cb(null, user, { message: 'Vous êtes bien connecté.' });
       }
       return cb(null, false, {
-        message: 'identifiant ou mot de passe incorrect',
+        message: 'Identifiant ou mot de passe incorrect.',
       });
     });
   }),
@@ -54,16 +54,16 @@ passport.use('admin', new LocalStrategy(
         return cb(err);
       } else if (results.length === 0) {
         return cb(null, false, {
-          message: 'identifiant ou mot de passe incorrect',
+          message: 'Identifiant ou mot de passe incorrect.',
         });
       }
       else if (encryptPassword(password) === results[0].password) {
         const id = results[0].id;
         const user = { id };
-        return cb(null, user, { message: 'Vous êtes bien connecté' });
+        return cb(null, user, { message: 'Vous êtes bien connecté.' });
       }
       return cb(null, false, {
-        message: 'identifiant ou mot de passe incorrect',
+        message: 'Identifiant ou mot de passe incorrect.',
       });
     });
   }),
