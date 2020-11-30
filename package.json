@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "connection.js",
+  "engines": {
+    "node": "12.18.3"
+  },
   "scripts": {
     "test": "nodemon src/index.js",
     "start": "node src/index.js"
